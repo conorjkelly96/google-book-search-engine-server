@@ -59,10 +59,10 @@ const typeDefs = gql`
     password: String!
   }
   type Mutation {
-    addBookToLibrary(book: BookInput!, libraryId: ID!): Library
-    addLibrary(library: LibraryInput!): Library
-    addUser(user: AddUserInput!): Auth
-    loginUser(user: LoginUserInput!): Auth
+    saveBook(book: BookInput!, libraryId: ID!): Library
+    deleteBook(library: LibraryInput!): Library
+    createUser(user: AddUserInput!): Auth
+    login(user: LoginUserInput!): Auth
   }
 `;
 
