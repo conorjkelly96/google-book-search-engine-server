@@ -1,22 +1,25 @@
-const express = require("express");
-const path = require("path");
-const db = require("./config/connection");
-const routes = require("./routes");
+const { ApolloServer } = require("apollo-server");
 
-const app = express();
-const PORT = process.env.PORT || 3001;
+const typeDefs = require("./schema");
+const resolvers = require("./resolvers");
+
+const db = require("./config/connection");
+const { authenticate } = require("./utils/auth");
+
+const PORT = process.env.PORT || 4000;
 const uri = process.env.MONGODB_URI;
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// if we're in production, serve client/build as static assets
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../public")));
-}
-
-app.use(routes);
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: ({ req }) => {
+    const user = authenticate(req);
+    return { user };
+  },
+});
 
 db.once("open", () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
+  server.listen({ port: PORT }).then(({ url }) => {
+    console.log(`🌍 Now listening on localhost:${PORT}`);
+  });
 });

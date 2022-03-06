@@ -2,67 +2,48 @@ const { gql } = require("apollo-server");
 
 const typeDefs = gql`
   type Book {
-    id: ID
-    title: String
+    bookId: ID!
     authors: [String]
-    pageCount: Int
-    imageUrl: String
-    publishDate: String
-    categories: [String]
-    rating: Float
-    previewUrl: String
-    description: String
-  }
-  type Library {
-    id: ID
-    name: String
-    books: [Book]
-    bookCount: Int
+    description: String!
+    title: String!
+    image: String!
+    link: String
   }
   type User {
-    id: ID!
-    name: String!
+    _id: ID!
+    username: String!
     email: String!
-    password: String!
+    bookCount: Int!
+    savedBooks: [Book]
   }
   type Auth {
     token: ID!
-    user: User!
+    user: User
   }
   type Query {
-    search(searchTerm: String!): [Book]
-    library(libraryId: ID!): Library
-    libraries: [Library]
+    me: User
   }
-  input BookInput {
-    id: ID
-    title: String
+  input LoginInput {
+    email: String!
+    password: String!
+  }
+  input NewUserInput {
+    username: String!
+    email: String!
+    password: String!
+  }
+  input SaveBookInput {
     authors: [String]
-    pageCount: Int
-    imageUrl: String
-    publishDate: String
-    categories: [String]
-    rating: Float
-    previewUrl: String
-    description: String
-  }
-  input LibraryInput {
-    name: String!
-  }
-  input AddUserInput {
-    name: String!
-    email: String!
-    password: String!
-  }
-  input LoginUserInput {
-    email: String!
-    password: String!
+    description: String!
+    title: String!
+    bookId: String!
+    image: String!
   }
   type Mutation {
-    saveBook(book: BookInput!, libraryId: ID!): Library
-    deleteBook(library: LibraryInput!): Library
-    createUser(user: AddUserInput!): Auth
-    login(user: LoginUserInput!): Auth
+    login(input: LoginInput!): Auth
+    addUser(input: NewUserInput!): Auth
+    saveBook(input: SaveBookInput!): User
+    removeBook(bookId: ID!): User
   }
 `;
 
