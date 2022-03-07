@@ -8,7 +8,7 @@ const getSingleUser = async (_, { user }) => {
       throw new AuthenticationError("User must be logged in");
     }
 
-    const foundUser = await User.findOne({ _id: user._id });
+    const foundUser = await User.findById({ _id: user._id });
 
     if (!foundUser) {
       throw new AuthenticationError("ERROR]: User does not exist");
