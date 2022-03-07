@@ -2,12 +2,17 @@ const { User } = require("../models");
 const { signToken } = require("../utils/auth");
 
 const createUser = async (_, { user }) => {
-  const newUser = await User.create(user);
+  try {
+    const newUser = await User.create(user);
 
-  return {
-    token: signToken(newUser),
-    user: newUser,
-  };
+    return {
+      token: signToken(newUser),
+      user: newUser,
+    };
+  } catch (error) {
+    console.log(`Error: Failed to add user | ${error.message}`);
+    throw new AuthenticationError("Failed to add user");
+  }
 };
 
 module.exports = createUser;

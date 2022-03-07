@@ -1,25 +1,29 @@
+require("dotenv").config();
 const { ApolloServer } = require("apollo-server");
+const mongoose = require("mongoose");
 
 const typeDefs = require("./schema");
 const resolvers = require("./resolvers");
-
-const db = require("./config/connection");
-const { authenticate } = require("./utils/auth");
-
-const PORT = process.env.PORT || 4000;
-const uri = process.env.MONGODB_URI;
+const { authMiddleware } = require("./utils/auth");
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => {
-    const user = authenticate(req);
-    return { user };
-  },
+  context: authMiddleware,
 });
 
-db.once("open", () => {
-  server.listen({ port: PORT }).then(({ url }) => {
-    console.log(`🌍 Now listening on localhost:${PORT}`);
-  });
-});
+const init = async () => {
+  try {
+    await mongoose.connect(`mongodb://localhost:27017/${process.env.DB_NAME}`, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    const { url } = await server.listen();
+    console.log(`Server running on ${url}`);
+  } catch (error) {
+    console.log(`[ERROR]: Failed to connect to DB | ${error.message}`);
+  }
+};
+
+init();

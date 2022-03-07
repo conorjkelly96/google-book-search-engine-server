@@ -1,3 +1,6 @@
+const { AuthenticationError, ApolloError } = require("apollo-server");
+const { User } = require("../models");
+
 const deleteBook = async (_, { bookId }, { user }) => {
   try {
     if (!user) {

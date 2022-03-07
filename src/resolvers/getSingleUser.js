@@ -1,3 +1,6 @@
+const { AuthenticationError, ApolloError } = require("apollo-server");
+const { User } = require("../models");
+
 const getSingleUser = async (_, { user }) => {
   try {
     if (!user) {

@@ -1,3 +1,4 @@
+const { AuthenticationError } = require("apollo-server");
 const { Library } = require("../models");
 
 const saveBook = async (_, { book, libraryId }, context) => {
