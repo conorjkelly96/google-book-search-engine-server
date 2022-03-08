@@ -19,7 +19,7 @@ const init = async () => {
       useUnifiedTopology: true,
     });
 
-    const { url } = await server.listen();
+    const { url } = await server.listen({ port: process.env.PORT || 4000 });
     console.log(`Server running on ${url}`);
   } catch (error) {
     console.log(`[ERROR]: Failed to connect to DB | ${error.message}`);
